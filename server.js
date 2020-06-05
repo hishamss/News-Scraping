@@ -54,12 +54,15 @@ app.get("/", (req, res) => {
             headline: headline,
             link: link,
             description: description,
-            image: img,
+            img: img,
           };
-          results.push(story);
+          //   results.push(story);
+          Article.create(story)
+            .then(() => {})
+            .catch(() => {});
         }
       });
-      res.send(results);
+      res.send("inserted");
     });
 });
 
