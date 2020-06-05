@@ -15,6 +15,11 @@ var ArticlesSchema = new Schema({
   img: {
     type: String,
   },
+  notes: { type: Array, default: [] },
+  saved: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 var Article = mongoose.model("articles", ArticlesSchema);
