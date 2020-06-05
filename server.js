@@ -2,13 +2,15 @@ var cheerio = require("cheerio");
 var axios = require("axios");
 var express = require("express");
 var mongoose = require("mongoose");
+var exphbs = require("express-handlebars");
+var PORT = process.env.PORT || 3000;
 var app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // Make public a static folder
 app.use(express.static("public"));
-// axios.get("https://www.reuters.com/politics").then((response) => {
-// https://www.washingtonpost.com/politics/?nid=top_nav_politics
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
 var Article = require("./models/articles");
 mongoose.connect("mongodb://localhost/articlesdb", {
   useNewUrlParser: true,
@@ -79,6 +81,6 @@ app.get("/", (req, res) => {
     });
 });
 
-app.listen(3000, function () {
+app.listen(PORT, function () {
   console.log("App running on port 3000!");
 });
