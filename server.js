@@ -56,13 +56,26 @@ app.get("/", (req, res) => {
             description: description,
             img: img,
           };
-          //   results.push(story);
-          Article.create(story)
-            .then(() => {})
-            .catch(() => {});
+          results.push(story);
         }
       });
-      res.send("inserted");
+      var oldNumber, newNumber;
+      Article.countDocuments({}, (err, count) => {
+        oldNumber = count;
+        Article.create(results)
+          .then(() => {
+            Article.countDocuments({}, (err, count) => {
+              newNumber = count;
+              res.send(`${newNumber - oldNumber} articles added!`);
+            });
+          })
+          .catch(() => {
+            Article.countDocuments({}, (err, count) => {
+              newNumber = count;
+              res.send(`${newNumber - oldNumber} articles have been added`);
+            });
+          });
+      });
     });
 });
 
