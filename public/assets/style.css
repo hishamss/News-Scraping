@@ -1,0 +1,13 @@
+.topNav {
+  background: #6e7cc5 !important;
+}
+
+.navBody > div {
+  color: white !important;
+}
+.navRight {
+  display: inline-block;
+}
+.navlink {
+  color: white !important;
+}
