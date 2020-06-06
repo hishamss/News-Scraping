@@ -1,8 +1,10 @@
-html,
 body {
-  height: 100%;
-  margin: 0;
   font-family: "Merriweather", serif;
+  background: url("/assets/bg1.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
 }
 
 .topNav {
@@ -18,18 +20,23 @@ body {
 .navlink {
   color: white !important;
 }
-.bg1 {
+/* .bg1 {
   background-image: url("/assets/bg1.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
   height: 100%;
-}
+} */
 
 .aritcleImg {
   width: 250px;
   height: 200px;
+}
+
+#loading {
+  height: 150px;
+  width: 150px;
 }
 
 .aritcleCard {
