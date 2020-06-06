@@ -37,6 +37,6 @@ $(document).ready(() => {
   });
 
   $(".scraping").on("hidden.bs.modal", (e) => {
-    location.reload();
+    location.href = "/";
   });
 });

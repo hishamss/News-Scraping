@@ -80,4 +80,10 @@ module.exports = (app) => {
       res.send(found);
     });
   });
+
+  app.get("/clear", (req, res) => {
+    Article.deleteMany({ saved: false }, () => {
+      res.render("home");
+    });
+  });
 };
