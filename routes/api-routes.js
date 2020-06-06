@@ -71,4 +71,13 @@ module.exports = (app) => {
         });
       });
   });
+  app.get("/all", (req, res) => {
+    var query = Article.find({ saved: false }).select(
+      "headline link description img -_id"
+    );
+    query.exec((err, found) => {
+      if (err) throw err;
+      res.send(found);
+    });
+  });
 };
