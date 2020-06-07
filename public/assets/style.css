@@ -55,3 +55,26 @@ body {
   font-size: 30px;
   color: white;
 }
+
+.SavedHeart {
+  position: absolute;
+  top: 8px;
+  right: 22px;
+  font-size: 30px;
+  color: #6e7cc5;
+}
+
+.headlineLink {
+  color: #6e7cc5;
+}
+
+.noteBtn,
+.submitBtn {
+  background-color: #6e7cc5;
+}
+
+.notesCol {
+  background-color: #6e7cc5;
+  color: white;
+  margin-bottom: 7px;
+}

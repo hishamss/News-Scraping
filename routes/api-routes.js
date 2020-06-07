@@ -84,7 +84,7 @@ module.exports = (app) => {
 
   app.get("/getSaved", (req, res) => {
     var query = Article.find({ saved: true }).select(
-      "headline link description img notes"
+      "headline link description img"
     );
     query.exec((err, found) => {
       if (err) throw err;
@@ -110,13 +110,42 @@ module.exports = (app) => {
     });
   });
 
-  app.delete("/clearSaved", (req, res) => {
-    Article.deleteMany({ saved: true }, (err, result) => {
+  app.delete("/deleteArticle/:id", (req, res) => {
+    Article.deleteOne({ _id: req.params.id }, (err, result) => {
       if (err) {
         res.send(false);
       } else {
         res.send(true);
       }
+    });
+  });
+
+  app.delete("/deleteArticle/id", (req, res) => {
+    Article.deleteOne({ _id: "Nike" }, function (err) {
+      if (err) console.log(err);
+      console.log("Successful deletion");
+    });
+  });
+
+  app.post("/addNote/:id", (req, res) => {
+    Article.updateOne(
+      { _id: req.params.id },
+      { $push: { notes: [req.body.note] } },
+      (err, result) => {
+        if (err) {
+          res.send(false);
+        } else {
+          res.send("Added!");
+        }
+      }
+    );
+  });
+
+  app.get("/getNotes/:id", (req, res) => {
+    var query = Article.find({ _id: req.params.id }).select("notes -_id");
+    query.exec((err, found) => {
+      if (err) throw err;
+      res.send(found);
     });
   });
 };

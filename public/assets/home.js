@@ -10,8 +10,8 @@ $(document).ready(() => {
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-9">
-                        <h5 class=" card-title"><a href="${row.link}" target="_blank">${row.headline}</a>
-                        </h5>
+                        <h3 class=" card-title"><a href="${row.link}" target="_blank" class="headlineLink">${row.headline}</a>
+                        </h3><br>
                         <p class="card-text">${row.description}</p>
                     </div>
                     <div class="col-md-3"><i class="far fa-heart SearchHeart" id="${row._id}" data-toggle="tooltip" data-placement="top" title="save this Article" aria-hidden="true"></i>
