@@ -6,6 +6,7 @@ mongoose.connect("mongodb://localhost/articlesdb", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
+  useFindAndModify: false,
 });
 module.exports = (app) => {
   app.get("/scrape", (req, res) => {
@@ -84,6 +85,18 @@ module.exports = (app) => {
   app.get("/clear", (req, res) => {
     Article.deleteMany({ saved: false }, () => {
       res.render("home");
+    });
+  });
+  app.get("/saved/:id", (req, res) => {
+    Article.findOneAndUpdate({ _id: req.params.id }, { saved: true }, function (
+      err,
+      result
+    ) {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send("updated");
+      }
     });
   });
 };

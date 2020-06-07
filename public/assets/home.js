@@ -6,7 +6,7 @@ $(document).ready(() => {
     }
     for (row of response) {
       $(".articles").append(
-        `<div class="col mt-3 mb-3 rounded">
+        `<div class="col mt-3 mb-3 rounded" data-id="${row._id}">
         <div class="card aritcleCard">
             <div class="card-body">
                 <div class="row">
@@ -40,5 +40,14 @@ $(document).ready(() => {
 
   $(".scraping").on("hidden.bs.modal", (e) => {
     location.href = "/";
+  });
+
+  $(document).on("click", ".SearchHeart", function () {
+    var id = $(this).attr("id");
+    $.get(`/saved/${id}`, (response) => {
+      if (response === "updated") {
+        $(".articles").find(`[data-id=${id}]`).hide();
+      }
+    });
   });
 });
