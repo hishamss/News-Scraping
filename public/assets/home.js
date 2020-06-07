@@ -49,6 +49,7 @@ $(document).ready(() => {
       success: function (result) {
         if (result === "updated") {
           $(".articles").find(`[data-id=${id}]`).hide();
+          alert("Article has been saved!");
         }
       },
     });

@@ -120,10 +120,10 @@ module.exports = (app) => {
     });
   });
 
-  app.delete("/deleteArticle/id", (req, res) => {
-    Article.deleteOne({ _id: "Nike" }, function (err) {
-      if (err) console.log(err);
-      console.log("Successful deletion");
+  app.get("/clearSaved", (req, res) => {
+    Article.deleteMany({ saved: true }, () => {
+      console.log("saved deleted");
+      res.render("saved");
     });
   });
 

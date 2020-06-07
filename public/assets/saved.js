@@ -26,15 +26,6 @@ $(document).ready(() => {
       );
     }
   });
-  $("#clearSavedLnk").on("click", () => {
-    $.ajax({
-      url: "/clearSaved",
-      type: "DELETE",
-      success: function (result) {
-        console.log(result);
-      },
-    });
-  });
 
   $(document).on("click", ".SavedHeart", function () {
     var id = $(this).attr("id");
