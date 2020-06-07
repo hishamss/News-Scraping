@@ -44,10 +44,14 @@ $(document).ready(() => {
 
   $(document).on("click", ".SearchHeart", function () {
     var id = $(this).attr("id");
-    $.get(`/saved/${id}`, (response) => {
-      if (response === "updated") {
-        $(".articles").find(`[data-id=${id}]`).hide();
-      }
+    $.ajax({
+      url: `/saved/${id}`,
+      type: "PUT",
+      success: function (result) {
+        if (result === "updated") {
+          $(".articles").find(`[data-id=${id}]`).hide();
+        }
+      },
     });
   });
 });

@@ -87,7 +87,7 @@ module.exports = (app) => {
       res.render("home");
     });
   });
-  app.get("/saved/:id", (req, res) => {
+  app.put("/saved/:id", (req, res) => {
     Article.findOneAndUpdate({ _id: req.params.id }, { saved: true }, function (
       err,
       result
