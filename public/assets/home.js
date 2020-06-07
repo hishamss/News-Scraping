@@ -1,6 +1,5 @@
 $(document).ready(() => {
   $.get("/all", (response) => {
-    console.log(response);
     if (response.length === 0) {
       $("#noArtciles").show();
     }

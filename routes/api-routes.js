@@ -82,6 +82,16 @@ module.exports = (app) => {
     });
   });
 
+  app.get("/getSaved", (req, res) => {
+    var query = Article.find({ saved: true }).select(
+      "headline link description img notes"
+    );
+    query.exec((err, found) => {
+      if (err) throw err;
+      res.send(found);
+    });
+  });
+
   app.get("/clear", (req, res) => {
     Article.deleteMany({ saved: false }, () => {
       res.render("home");
