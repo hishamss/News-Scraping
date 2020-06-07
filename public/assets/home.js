@@ -15,7 +15,9 @@ $(document).ready(() => {
                         </h5>
                         <p class="card-text">${row.description}</p>
                     </div>
-                    <div class="col-md-3"><img class="img-fluid aritcleImg" src="${row.img}"></div>
+                    <div class="col-md-3"><i class="far fa-heart SearchHeart" id="${row._id}" data-toggle="tooltip" data-placement="top" title="save this Article" aria-hidden="true"></i>
+
+                    <span class="sr-only">save this Article</span><img class="img-fluid aritcleImg" src="${row.img}"></div>
                 </div>
             </div>
         </div>

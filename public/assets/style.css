@@ -47,3 +47,11 @@ body {
   width: 100%;
   margin: 0;
 }
+
+.SearchHeart {
+  position: absolute;
+  top: 8px;
+  right: 22px;
+  font-size: 30px;
+  color: white;
+}

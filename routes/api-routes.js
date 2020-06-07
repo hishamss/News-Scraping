@@ -73,7 +73,7 @@ module.exports = (app) => {
   });
   app.get("/all", (req, res) => {
     var query = Article.find({ saved: false }).select(
-      "headline link description img -_id"
+      "headline link description img"
     );
     query.exec((err, found) => {
       if (err) throw err;
