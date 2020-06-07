@@ -99,4 +99,14 @@ module.exports = (app) => {
       }
     });
   });
+
+  app.delete("/clearSaved", (req, res) => {
+    Article.deleteMany({ saved: true }, (err, result) => {
+      if (err) {
+        res.send(false);
+      } else {
+        res.send(true);
+      }
+    });
+  });
 };
