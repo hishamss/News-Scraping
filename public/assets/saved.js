@@ -46,10 +46,14 @@ $(document).ready(() => {
     $("#noteMsg").text("");
     NoteId = $(this).data("noteid");
     $.get(`/getNotes/${NoteId}`, (results) => {
+      noteIndex = 0;
       for (note of results[0].notes) {
         $(".noteDisplay").append(
-          `<div class="col notesCol rounded">${note}</div><div class="w-100"></div>`
+          `<div class="col notesCol rounded">${note}<i class="fas fa-times" data-index="${noteIndex}" data-toggle="tooltip" data-placement="top" title="Delete Note" aria-hidden="true"></i>
+
+          <span class="sr-only">Delete Note</span></div><div class="w-100"></div>`
         );
+        noteIndex++;
       }
 
       $(".notes").modal("show");
@@ -62,14 +66,47 @@ $(document).ready(() => {
     if (Note !== "") {
       $.post(`/addNote/${NoteId}`, { note: Note }, (response) => {
         $("#noteMsg").text(response);
+
         $(".noteDisplay").append(
-          `<div class="col notesCol rounded">${Note}</div><div class="w-100"></div>`
+          `<div class="col notesCol rounded">${Note}<i class="fas fa-times" data-index="${noteIndex}" data-toggle="tooltip" data-placement="top" title="Delete Note" aria-hidden="true"></i>
+
+          <span class="sr-only">Delete Note</span></div><div class="w-100"></div>`
         );
+        noteIndex++;
       });
     } else {
       $("#noteMsg").text("Please add note!");
     }
 
     $("#noteText").val("");
+  });
+
+  $(document).on("click", ".fa-times", function () {
+    var index = $(this).data("index");
+
+    var id = `${NoteId},${index}`;
+    console.log(id);
+    $.ajax({
+      url: `/deleteNote/${id}`,
+      type: "DELETE",
+      success: function (result) {
+        if (result) {
+          $(".noteDisplay").text("");
+          $.get(`/getNotes/${NoteId}`, (results) => {
+            noteIndex = 0;
+            for (note of results[0].notes) {
+              $(".noteDisplay").append(
+                `<div class="col notesCol rounded">${note}<i class="fas fa-times" data-index="${noteIndex}" data-toggle="tooltip" data-placement="top" title="Delete Note" aria-hidden="true"></i>
+      
+                <span class="sr-only">Delete Note</span></div><div class="w-100"></div>`
+              );
+              noteIndex++;
+            }
+
+            $(".notes").modal("show");
+          });
+        }
+      },
+    });
   });
 });

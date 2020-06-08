@@ -64,6 +64,14 @@ body {
   color: #6e7cc5;
 }
 
+.fa-times {
+  position: absolute;
+  top: 3px;
+  right: 14px;
+  font-size: 18px;
+  color: white;
+}
+
 .headlineLink {
   color: #6e7cc5;
 }

@@ -121,6 +121,32 @@ module.exports = (app) => {
     });
   });
 
+  app.delete("/deleteNote/:id", (req, res) => {
+    console.log(req.params.id);
+    var articleId = req.params.id.split(",")[0];
+    var noteIndex = req.params.id.split(",")[1];
+    // MongoDB does not accept concatination inside the query so the workaround is to define update as variable then pass it to the syntax
+    var update = { $set: {} };
+    update["$set"][`notes.${noteIndex}`] = null;
+    Article.updateOne({ _id: articleId }, update, function (err, found) {
+      if (err) {
+        res.send(false);
+      } else {
+        Article.updateOne(
+          { _id: articleId },
+          { $pull: { notes: null } },
+          function (error, results) {
+            if (error) {
+              res.send("false2");
+            } else {
+              res.send(true);
+            }
+          }
+        );
+      }
+    });
+  });
+
   app.get("/clearSaved", (req, res) => {
     Article.deleteMany({ saved: true }, () => {
       console.log("saved deleted");
