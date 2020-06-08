@@ -2,7 +2,8 @@ var cheerio = require("cheerio");
 var axios = require("axios");
 var mongoose = require("mongoose");
 var Article = require("../models/articles");
-mongoose.connect("mongodb://localhost/articlesdb", {
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/articlesdb";
+mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
