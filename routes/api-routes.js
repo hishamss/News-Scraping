@@ -1,7 +1,8 @@
 var cheerio = require("cheerio");
 var axios = require("axios");
 var mongoose = require("mongoose");
-var Article = require("../models/articles");
+// Require all models
+var db = require("../models");
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/articlesdb";
 mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
@@ -55,17 +56,17 @@ module.exports = (app) => {
           }
         });
         var oldNumber, newNumber;
-        Article.countDocuments({}, (err, count) => {
+        db.Article.countDocuments({}, (err, count) => {
           oldNumber = count;
-          Article.create(results)
+          db.Article.create(results)
             .then(() => {
-              Article.countDocuments({}, (err, count) => {
+              db.Article.countDocuments({}, (err, count) => {
                 newNumber = count;
                 res.send(`${newNumber - oldNumber} articles added!`);
               });
             })
             .catch(() => {
-              Article.countDocuments({}, (err, count) => {
+              db.Article.countDocuments({}, (err, count) => {
                 newNumber = count;
                 res.send(`${newNumber - oldNumber} articles added`);
               });
@@ -74,7 +75,7 @@ module.exports = (app) => {
       });
   });
   app.get("/all", (req, res) => {
-    var query = Article.find({ saved: false }).select(
+    var query = db.Article.find({ saved: false }).select(
       "headline link description img"
     );
     query.exec((err, found) => {
@@ -84,7 +85,7 @@ module.exports = (app) => {
   });
 
   app.get("/getSaved", (req, res) => {
-    var query = Article.find({ saved: true }).select(
+    var query = db.Article.find({ saved: true }).select(
       "headline link description img"
     );
     query.exec((err, found) => {
@@ -94,25 +95,26 @@ module.exports = (app) => {
   });
 
   app.get("/clear", (req, res) => {
-    Article.deleteMany({ saved: false }, () => {
+    db.Article.deleteMany({ saved: false }, () => {
       res.render("home");
     });
   });
   app.put("/saved/:id", (req, res) => {
-    Article.findOneAndUpdate({ _id: req.params.id }, { saved: true }, function (
-      err,
-      result
-    ) {
-      if (err) {
-        res.send(err);
-      } else {
-        res.send("updated");
+    db.Article.findOneAndUpdate(
+      { _id: req.params.id },
+      { saved: true },
+      function (err, result) {
+        if (err) {
+          res.send(err);
+        } else {
+          res.send("updated");
+        }
       }
-    });
+    );
   });
 
   app.delete("/deleteArticle/:id", (req, res) => {
-    Article.deleteOne({ _id: req.params.id }, (err, result) => {
+    db.Article.deleteOne({ _id: req.params.id }, (err, result) => {
       if (err) {
         res.send(false);
       } else {
@@ -128,11 +130,11 @@ module.exports = (app) => {
     // MongoDB does not accept concatination inside the query so the workaround is to define update as variable then pass it to the syntax
     var update = { $set: {} };
     update["$set"][`notes.${noteIndex}`] = null;
-    Article.updateOne({ _id: articleId }, update, function (err, found) {
+    db.Article.updateOne({ _id: articleId }, update, function (err, found) {
       if (err) {
         res.send(false);
       } else {
-        Article.updateOne(
+        db.Article.updateOne(
           { _id: articleId },
           { $pull: { notes: null } },
           function (error, results) {
@@ -148,14 +150,14 @@ module.exports = (app) => {
   });
 
   app.get("/clearSaved", (req, res) => {
-    Article.deleteMany({ saved: true }, () => {
+    db.Article.deleteMany({ saved: true }, () => {
       console.log("saved deleted");
       res.render("saved");
     });
   });
 
   app.post("/addNote/:id", (req, res) => {
-    Article.updateOne(
+    db.Article.updateOne(
       { _id: req.params.id },
       { $push: { notes: [req.body.note] } },
       (err, result) => {
@@ -169,7 +171,7 @@ module.exports = (app) => {
   });
 
   app.get("/getNotes/:id", (req, res) => {
-    var query = Article.find({ _id: req.params.id }).select("notes -_id");
+    var query = db.Article.find({ _id: req.params.id }).select("notes -_id");
     query.exec((err, found) => {
       if (err) throw err;
       res.send(found);
