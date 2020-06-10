@@ -10,10 +10,11 @@ News Scraper: scrapes news articles from The Washington Post-Politics page. It's
 1. in the home page, user can scrape new articles, delete all not saved articles, save article, or go to saved articles page.
    - Hint: once articles scraped, only new articles will be saved to DB- no duplicates allowed in DB.
 2. in saved articles page, user can delete all saved articles, delete specific saved article, add/delete note for specific article, or go to the home page.
+   - Hint: deleting specific article will delete all the notes referenced to the deleted article.
 
-   !["Scrape Articles"](/public/assets/media/scrape.gif)
+!["Scrape Articles"](/public/assets/media/scrape.gif)
 
-   !["Notes"](/public/assets/media/notes.gif)
+!["Notes"](/public/assets/media/notes.gif)
 
 <h2>Technology Used</h2>
 <hr>
