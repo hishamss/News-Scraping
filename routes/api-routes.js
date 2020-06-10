@@ -114,13 +114,16 @@ module.exports = (app) => {
   });
 
   app.delete("/deleteArticle/:id", (req, res) => {
-    db.Article.deleteOne({ _id: req.params.id }, (err, result) => {
-      if (err) {
-        res.send(false);
-      } else {
+    db.Article.deleteOne({ _id: req.params.id })
+      .then(() => {
+        return db.Note.deleteMany({ articleId: req.params.id });
+      })
+      .then(() => {
         res.send(true);
-      }
-    });
+      })
+      .catch(() => {
+        res.send(false);
+      });
   });
 
   app.delete("/deleteNote/:id", (req, res) => {

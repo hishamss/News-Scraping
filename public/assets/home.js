@@ -4,6 +4,12 @@ $(document).ready(() => {
       $("#noArtciles").show();
     }
     for (row of response) {
+      var imageLink;
+      if (row.img === undefined) {
+        imageLink = "/assets/no-image-available.png";
+      } else {
+        imageLink = row.img;
+      }
       $(".articles").append(
         `<div class="col mt-3 mb-3 rounded" data-id="${row._id}">
         <div class="card aritcleCard">
@@ -16,7 +22,7 @@ $(document).ready(() => {
                     </div>
                     <div class="col-md-3"><i class="far fa-heart SearchHeart" id="${row._id}" data-toggle="tooltip" data-placement="top" title="save this Article" aria-hidden="true"></i>
 
-                    <span class="sr-only">save this Article</span><img class="img-fluid aritcleImg" src="${row.img}"></div>
+                    <span class="sr-only">save this Article</span><img class="img-fluid aritcleImg" src="${imageLink}"></div>
                 </div>
             </div>
         </div>

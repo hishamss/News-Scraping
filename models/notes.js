@@ -5,6 +5,9 @@ var NotesSchema = new Schema({
   text: {
     type: String,
   },
+  articleId: {
+    type: String,
+  },
 });
 
 var Notes = mongoose.model("Notes", NotesSchema);
