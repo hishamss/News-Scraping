@@ -45,9 +45,8 @@ $(document).ready(() => {
     $("#noteText").val("");
     $("#noteMsg").text("");
     ArticleId = $(this).data("articleid");
-    console.log("opened notes for ", ArticleId);
+
     $.get(`/getNotes/${ArticleId}`, (results) => {
-      console.log(results);
       for (note of results.notes) {
         $(".noteDisplay").append(
           `<div class="col notesCol rounded">${note.text}<i class="fas fa-times"   data-noteindex="${note._id}" data-toggle="tooltip" data-placement="top" title="Delete Note" aria-hidden="true"></i>
@@ -64,13 +63,11 @@ $(document).ready(() => {
     $("#noteMsg").text("");
     $(".noteDisplay").text("");
     var Note = $("#noteText").val().trim();
-    console.log("adding note to ", ArticleId);
+
     if (Note !== "") {
       $.post(`/addNote/${ArticleId}`, { text: Note }, (response) => {
         $("#noteMsg").text(response);
         $.get(`/getNotes/${ArticleId}`, (results) => {
-          console.log(results);
-
           for (note of results.notes) {
             $(".noteDisplay").append(
               `<div class="col notesCol rounded">${note.text}<i class="fas fa-times" data-noteindex="${note._id}" data-toggle="tooltip" data-placement="top" title="Delete Note" aria-hidden="true"></i>
@@ -97,7 +94,7 @@ $(document).ready(() => {
     var index = $(this).data("noteindex");
 
     var id = `${ArticleId},${index}`;
-    console.log(id);
+
     $.ajax({
       url: `/deleteNote/${id}`,
       type: "DELETE",
