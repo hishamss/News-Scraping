@@ -128,53 +128,81 @@ module.exports = (app) => {
     var articleId = req.params.id.split(",")[0];
     var noteIndex = req.params.id.split(",")[1];
     // MongoDB does not accept concatination inside the query so the workaround is to define update as variable then pass it to the syntax
-    var update = { $set: {} };
-    update["$set"][`notes.${noteIndex}`] = null;
-    db.Article.updateOne({ _id: articleId }, update, function (err, found) {
-      if (err) {
-        res.send(false);
-      } else {
-        db.Article.updateOne(
+    db.Note.deleteOne({ _id: noteIndex })
+      .then((found) => {
+        console.log("deleted Notes ", found);
+        return db.Article.updateOne(
           { _id: articleId },
-          { $pull: { notes: null } },
-          function (error, results) {
-            if (error) {
-              res.send("false2");
-            } else {
-              res.send(true);
-            }
-          }
+          { $pullAll: { notes: [noteIndex] } }
         );
-      }
-    });
+      })
+      .then((dbArticle) => {
+        res.send(true);
+      })
+      .catch(() => {
+        res.send(false);
+      });
   });
 
   app.get("/clearSaved", (req, res) => {
-    db.Article.deleteMany({ saved: true }, () => {
-      console.log("saved deleted");
-      res.render("saved");
-    });
+    db.Article.deleteMany({ saved: true })
+      .then(() => {
+        return db.Note.deleteMany({});
+      })
+      .then(() => {
+        console.log("saved deleted");
+        res.render("saved");
+      })
+      .catch((err) => {
+        console.log("clearSavedError", err);
+        res.status(500).end();
+      });
   });
 
   app.post("/addNote/:id", (req, res) => {
-    db.Article.updateOne(
-      { _id: req.params.id },
-      { $push: { notes: [req.body.note] } },
-      (err, result) => {
-        if (err) {
-          res.send(false);
-        } else {
-          res.send("Added!");
-        }
-      }
-    );
+    // db.Article.updateOne(
+    //   { _id: req.params.id },
+    //   { $push: { notes: [req.body.note] } },
+    //   (err, result) => {
+    //     if (err) {
+    //       res.send(false);
+    //     } else {
+    //       res.send("Added!");
+    //     }
+    //   }
+    // );
+    console.log("for Me", req.body);
+    console.log(req.params.id);
+    db.Note.create(req.body)
+      .then((dbNote) => {
+        return db.Article.findOneAndUpdate(
+          { _id: req.params.id },
+          { $push: { notes: dbNote._id } },
+          { new: true }
+        );
+      })
+      .then((dbArticle) => {
+        res.send("Added!");
+      })
+      .catch((err) => {
+        console.log(err);
+        res.send(false);
+      });
   });
 
   app.get("/getNotes/:id", (req, res) => {
-    var query = db.Article.find({ _id: req.params.id }).select("notes -_id");
-    query.exec((err, found) => {
-      if (err) throw err;
-      res.send(found);
-    });
+    var query = db.Article.findOne({ _id: req.params.id }).select("notes -_id");
+    // query.exec((err, found) => {
+    //   if (err) throw err;
+    //   res.send(found);
+    // });
+    query
+      .populate("notes")
+      .then((found) => {
+        res.json(found);
+      })
+      .catch((err) => {
+        res.status(500).end();
+      });
   });
 };

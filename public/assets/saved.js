@@ -13,7 +13,7 @@ $(document).ready(() => {
                           <h3 class=" card-title"><a href="${row.link}" target="_blank" class="headlineLink">${row.headline}</a>
                           </h3><br>
                           <p class="card-text">${row.description}</p>
-                          <button type="button" class="btn btn-primary noteBtn" data-noteid="${row._id}">Add Note</button>
+                          <button type="button" class="btn btn-primary noteBtn" data-articleid="${row._id}">Add Note</button>
                       </div>
                       <div class="col-md-3"><i class="far fa-heart SavedHeart" id="${row._id}" data-toggle="tooltip" data-placement="top" title="Delete Article" aria-hidden="true"></i>
   
@@ -44,16 +44,16 @@ $(document).ready(() => {
     $(".noteDisplay").text("");
     $("#noteText").val("");
     $("#noteMsg").text("");
-    NoteId = $(this).data("noteid");
-    $.get(`/getNotes/${NoteId}`, (results) => {
-      noteIndex = 0;
-      for (note of results[0].notes) {
+    ArticleId = $(this).data("articleid");
+    console.log("opened notes for ", ArticleId);
+    $.get(`/getNotes/${ArticleId}`, (results) => {
+      console.log(results);
+      for (note of results.notes) {
         $(".noteDisplay").append(
-          `<div class="col notesCol rounded">${note}<i class="fas fa-times" data-index="${noteIndex}" data-toggle="tooltip" data-placement="top" title="Delete Note" aria-hidden="true"></i>
+          `<div class="col notesCol rounded">${note.text}<i class="fas fa-times"   data-noteindex="${note._id}" data-toggle="tooltip" data-placement="top" title="Delete Note" aria-hidden="true"></i>
 
-          <span class="sr-only">Delete Note</span></div><div class="w-100"></div>`
+      <span class="sr-only">Delete Note</span></div><div class="w-100"></div>`
         );
-        noteIndex++;
       }
 
       $(".notes").modal("show");
@@ -62,17 +62,29 @@ $(document).ready(() => {
 
   $(".submitBtn").on("click", () => {
     $("#noteMsg").text("");
+    $(".noteDisplay").text("");
     var Note = $("#noteText").val().trim();
+    console.log("adding note to ", ArticleId);
     if (Note !== "") {
-      $.post(`/addNote/${NoteId}`, { note: Note }, (response) => {
+      $.post(`/addNote/${ArticleId}`, { text: Note }, (response) => {
         $("#noteMsg").text(response);
+        $.get(`/getNotes/${ArticleId}`, (results) => {
+          console.log(results);
 
-        $(".noteDisplay").append(
-          `<div class="col notesCol rounded">${Note}<i class="fas fa-times" data-index="${noteIndex}" data-toggle="tooltip" data-placement="top" title="Delete Note" aria-hidden="true"></i>
-
+          for (note of results.notes) {
+            $(".noteDisplay").append(
+              `<div class="col notesCol rounded">${note.text}<i class="fas fa-times" data-noteindex="${note._id}" data-toggle="tooltip" data-placement="top" title="Delete Note" aria-hidden="true"></i>
+    
           <span class="sr-only">Delete Note</span></div><div class="w-100"></div>`
-        );
-        noteIndex++;
+            );
+          }
+        });
+        // $(".noteDisplay").append(
+        //   `<div class="col notesCol rounded">${Note}<i class="fas fa-times" data-index="${noteIndex}" data-toggle="tooltip" data-placement="top" title="Delete Note" aria-hidden="true"></i>
+
+        //   <span class="sr-only">Delete Note</span></div><div class="w-100"></div>`
+        // );
+        // noteIndex++;
       });
     } else {
       $("#noteMsg").text("Please add note!");
@@ -82,9 +94,9 @@ $(document).ready(() => {
   });
 
   $(document).on("click", ".fa-times", function () {
-    var index = $(this).data("index");
+    var index = $(this).data("noteindex");
 
-    var id = `${NoteId},${index}`;
+    var id = `${ArticleId},${index}`;
     console.log(id);
     $.ajax({
       url: `/deleteNote/${id}`,
@@ -92,11 +104,12 @@ $(document).ready(() => {
       success: function (result) {
         if (result) {
           $(".noteDisplay").text("");
-          $.get(`/getNotes/${NoteId}`, (results) => {
+          $.get(`/getNotes/${ArticleId}`, (results) => {
             noteIndex = 0;
-            for (note of results[0].notes) {
+            for (note of results.notes) {
               $(".noteDisplay").append(
-                `<div class="col notesCol rounded">${note}<i class="fas fa-times" data-index="${noteIndex}" data-toggle="tooltip" data-placement="top" title="Delete Note" aria-hidden="true"></i>
+                `<div class="col notesCol rounded">${note.text}<i class="fas fa-times" data-index="${noteIndex}"
+                data-noteindex="${note._id}" data-toggle="tooltip" data-placement="top" title="Delete Note" aria-hidden="true"></i>
       
                 <span class="sr-only">Delete Note</span></div><div class="w-100"></div>`
               );
