@@ -94,7 +94,8 @@ News Scraper: scrapes news articles from The Washington Post-Politics page. It's
 <h2>Learning Points</h2>
 <hr>
 
-- Using Mongoose ORM to provide easy access to MongoDB.
+- Using Mongoose ODM to provide easy access to MongoDB.
+- Using Mongoose populate to reference documents in other collections.
 - Web Scraping: Using cheerio to extract data from other website.
 
 <h2>Author</h2>
